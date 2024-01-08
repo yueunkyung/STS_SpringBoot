@@ -1,5 +1,8 @@
 package com.shinhan.sbproject;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -20,6 +23,41 @@ public class BoardTest {
 	BoardRepository brepo;
 	
 	@Test
+	void f14() {
+		java.util.Date d = new java.util.Date(); 
+		Timestamp date = new Timestamp(d.getTime()-1000000*60*60*12);
+		Timestamp date2= new Timestamp(d.getTime()+1000000*60*60*12);
+		System.out.println(date);
+		System.out.println(date2);
+		System.out.println(d.getTime());
+		long bno1=1L;
+		long bno2=100L;
+		String writer="user3";
+		String title="스프링";
+		
+		List<BoardVO> blist =brepo.findByRegDateBetweenAndBnoBetweenAndWriterNotLikeAndTitleContainingAndContentNotNullOrderByBno(date,date2,bno1, bno2, writer, title);
+		blist.forEach(board->{
+			log.info("title or content  조건조회:" + board.toString());
+		});
+	}
+
+	//@Test
+	void f13() {
+		List<BoardVO> blist = brepo.findByContentContainingOrTitleContaining("월요일","월요일");
+		blist.forEach(board -> {
+			log.info("ContentContainingOrTitleContaining 조건조회: "+board.toString());
+		});
+	}
+
+	//@Test
+	void f12() {
+		List<BoardVO> blist = brepo.findByWriterOrderByRegDateDesc("user3");
+		blist.forEach(board -> {
+			log.info("WriterOrderByRegDateDesc 조건조회: "+board.toString());
+		});
+	}
+	
+	//@Test
 	void f11() {
 		List<BoardVO> blist = brepo.findByBnoGreaterThanAndBnoLessThanEqual(40L, 45L);
 		blist.forEach(board -> {
