@@ -28,8 +28,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "tbl_boards")
-@SequenceGenerator(name = "BOARD_SEQ_GENERATOR", sequenceName = "BOARD_SEQ2", // 매핑할 데이터베이스 시퀀스 이름
+//@Table(name = "tbl_boards")
+@Table(name = "tbl_boards_ek")
+//@SequenceGenerator(name = "BOARD_SEQ_GENERATOR", sequenceName = "BOARD_SEQ2", // 매핑할 데이터베이스 시퀀스 이름
+@SequenceGenerator(name = "BOARD_SEQ_GENERATOR", sequenceName = "BOARD_SEQ_ek", // 매핑할 데이터베이스 시퀀스 이름
 		initialValue = 1, allocationSize = 1)
 // sequenceName = "BOARD_SEQ" -> 실제 DB에서 사용하는 이름
 public class BoardVO {

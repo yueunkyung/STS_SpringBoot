@@ -12,15 +12,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity
+@Entity	//JPA가 객체를 Entity라고 한다.
 @Table(name="tbl_car")
 @Getter@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString@Builder
 public class CarVO {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Id	//필수 annotation
+	@GeneratedValue(strategy = GenerationType.AUTO) //필수가 아님
 	Long carNum;
 	String model;
 	int price;

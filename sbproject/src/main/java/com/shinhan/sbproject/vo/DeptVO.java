@@ -25,7 +25,8 @@ import lombok.NoArgsConstructor;
 public class DeptVO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	//Oracle: sequence, MySQL: auto increment
+	//Oracle: sequence(AUTO) 
+	//MySQL: auto increment(IDENTITY), AUTO이면 테이블로 만들어짐
 	int departmentId;
 	
 	@Column(length = 50)

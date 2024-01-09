@@ -1,17 +1,22 @@
 package com.shinhan.sbproject;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
+import com.querydsl.core.BooleanBuilder;
 import com.shinhan.firstzone.repository.BoardRepository;
 import com.shinhan.sbproject.vo.BoardVO;
+import com.shinhan.sbproject.vo.QBoardVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,8 +26,91 @@ public class BoardTest {
 	//주입하고 싶은게 하나일때 @Autowired 사용한다.
 	@Autowired
 	BoardRepository brepo;
+
 	
-	@Test
+	//@Test
+	void f20() {
+		BooleanBuilder builder = new BooleanBuilder();
+		QBoardVO board = QBoardVO.boardVO;
+		Long bno = 5L;
+		String writer = "user3";
+		String content = "%억난%";
+		
+		if(bno != null) builder.and(board.bno.gt(bno));
+		if(writer != null) builder.and(board.writer.eq(writer));
+		if(content != null) builder.and(board.content.like(content));
+		
+		log.info(builder.toString());
+
+		//boardVO.bno > 5 && boardVO.writer = user3 && boardVO.content like %억난%
+		//동적 SQL 만들기
+		List<BoardVO> blist = (List<BoardVO>)brepo.findAll(builder);
+		blist.forEach(b->{
+			log.info(b.toString());
+		});
+	}
+	
+	//@Test
+	void f19() {
+		brepo.selectByWriter("user3").forEach(sarr -> {
+			 log.info("title: "+ sarr[0]);
+			 log.info("content: "+ sarr[1]);
+			 log.info("writer: "+ sarr[2]);
+			 log.info("bno: "+ sarr[3]);
+			 log.info("regDate: "+ sarr[4]);
+			 log.info("============================================");
+		});
+
+	}
+	
+	//@Test
+	void f18() {
+		//List<BoardVO> blist = brepo.selectByTitleAndWriter5(5L, "Java", "user");
+		//blist.forEach(b->log.info(b.toString()));
+
+		List<Object[]> blist = brepo.selectByTitleAndWriter6(5L, "Java", "user");
+		blist.forEach(arr->log.info(Arrays.toString(arr)));
+	}
+	
+	//@Test
+	void f17() {
+		//Pageable paging = PageRequest.of(1, 5);
+		//Pageable paging = PageRequest.of(1, 5, Sort.by(Sort.Direction.DESC, "writer","title"));
+		//조건에 맞는 Data가 22건이면, 한페이지가 5건, 전체페이지는 5페이지, 마지막페이지는 (0~4)는 2건임!
+		Pageable paging = PageRequest.of(4, 5, Sort.by("writer").ascending());
+		//Page<BoardVO> result = brepo.findAll(paging);
+		Page<BoardVO> result = brepo.findByBnoBetween(1L, 100L, paging);
+		
+		log.info("페이지사이즈 getSize: "+result.getSize());
+		log.info("현재페이지 getNumber: "+result.getNumber());
+		log.info("getNumberOfElements: "+result.getNumberOfElements());
+		log.info("건수 getTotalElements: "+result.getTotalElements());
+		log.info("페이지건수 getTotalPages: "+result.getTotalPages());
+		log.info("내용 getContent: "+result.getContent());
+		log.info("getPageable: "+result.getPageable());
+		log.info("getSort: "+result.getSort());
+		
+		result.getContent().forEach(b -> log.info(b.toString()));
+	}
+	
+	//@Test
+	void f16() {
+		Pageable paging = PageRequest.of(0, 6); //page(몇페이지), pagesize(한페이지 건수)
+		//where bno>5 ..... 6부터 나온다.(0페이지에 6건: 1~11)
+		//                            (1페이지에 6건: 12~17)  
+		brepo.findByBnoGreaterThan(5L, paging).forEach(b->log.info(b.toString()));
+	}
+	
+	//@Test
+	void f15() {
+		String writer = "user3";
+		int cnt = brepo.countByWriter(writer);
+		log.info("user3이 작성한 board 건 수" + cnt);
+		
+		brepo.findByWriter(writer).forEach(b->log.info(b.toString()));
+	}
+	
+	//@Test
 	void f14() {
 		java.util.Date d = new java.util.Date(); 
 		Timestamp date = new Timestamp(d.getTime()-1000000*60*60*12);

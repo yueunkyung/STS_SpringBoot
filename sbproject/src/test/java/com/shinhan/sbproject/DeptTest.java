@@ -18,6 +18,16 @@ public class DeptTest {
 
 	@Autowired
 	DeptRepository drepo;
+	
+	// 특정 managerId가 관리하는 부서들의 부서이름 뒤에 "OK"라는 문자를 추가(수정)
+	//@Test
+	void f9() {
+		drepo.findBymanagerId(7).forEach(dept -> {
+			String dname= dept.getDepartmentName()+"OK";
+			dept.setDepartmentName(dname);
+			drepo.save(dept);
+		});
+	}
 		
 	//입력 10
 	//@Test
