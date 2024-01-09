@@ -37,6 +37,7 @@ public class BoardTest {
 		String content = "%억난%";
 		
 		if(bno != null) builder.and(board.bno.gt(bno));
+		//if(writer != null) builder.and(board.writer.eq(writer)); //boardVO.bno > 5 && boardVO.writer = user3 && boardVO.content like %억난%
 		if(writer != null) builder.or(board.writer.eq(writer));
 		if(content != null) builder.and(board.content.like(content));
 		
