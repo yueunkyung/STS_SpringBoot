@@ -53,7 +53,7 @@ public interface BoardRepository extends CrudRepository<BoardVO, Long>
 			+ "order by bno desc") //BoardVO ==> Entity 이름임.
 	List<BoardVO> selectByTitleAndWriter2(Long bno, String title, String writer);
 	
-	//SQL문(nativeQuery), 테비블 이름, * 가능
+	//SQL문(nativeQuery = true), 테비블 이름, * 가능
 	@Query(value = "select * from tbl_boards_ek b "
 			+ "where b.title like %?2% and b.writer like %?3% and b.bno > ?1 "
 			+ "order by bno desc", nativeQuery = true) //BoardVO ==> Entity 이름임.

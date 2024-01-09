@@ -37,12 +37,14 @@ public class BoardTest {
 		String content = "%억난%";
 		
 		if(bno != null) builder.and(board.bno.gt(bno));
-		if(writer != null) builder.and(board.writer.eq(writer));
+		if(writer != null) builder.or(board.writer.eq(writer));
 		if(content != null) builder.and(board.content.like(content));
 		
 		log.info(builder.toString());
 
-		//boardVO.bno > 5 && boardVO.writer = user3 && boardVO.content like %억난%
+		//boardVO.bno > 5 || boardVO.writer = user3 && boardVO.content like %억난%
+		// ==> or 와 and 가 있으면 and 먼저 실행함. => boardVO.bno > 5 || (boardVO.writer = user3 && boardVO.content like %억난%)
+		
 		//동적 SQL 만들기
 		List<BoardVO> blist = (List<BoardVO>)brepo.findAll(builder);
 		blist.forEach(b->{
