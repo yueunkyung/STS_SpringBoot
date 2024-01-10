@@ -8,14 +8,22 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.test.annotation.Commit;
 
 import com.shinhan.sbproject.repository.PDSBoardRepository;
 import com.shinhan.sbproject.repository.PDSFileRepository;
 import com.shinhan.sbproject.vo2.PDSBoard;
 import com.shinhan.sbproject.vo2.PDSFile;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
+@Commit
 @Slf4j
 @SpringBootTest
 public class OneToManyTest {
@@ -25,6 +33,74 @@ public class OneToManyTest {
 	@Autowired
 	PDSFileRepository frepo;
 
+	//PPT 79P
+	@Test
+	void fileSelectAll() {
+		//frepo.findAll(Sort.by(Direction.DESC, "fno")).forEach(f->log.info(f.toString()));
+		log.info("----------------------------------------");
+		Pageable paging = PageRequest.of(0, 3);
+		Page<PDSFile> result = frepo.findAll(paging);
+		
+		int cnt = result.getTotalPages();
+		for(int i=0; i<cnt; i++) {
+			paging = PageRequest.of(i, 3);
+			frepo.findAll(paging).forEach(f->log.info(f.toString()));
+			log.info("------------------------------");
+		}
+	}
+	
+	//@Test
+	void deleteBoard() {
+		brepo.deleteById(1L);
+	}
+	
+	//@Test
+	void getFileByBoard() {
+		brepo.findById(1L).ifPresent(b->{
+			for(PDSFile f:b.getFiles2()) {
+				log.info(f.toString());
+			}
+		});
+	}
+	
+	//@Test
+	void fileDelete() {
+		frepo.deleteById(5L);
+	}
+	
+	//@Test
+	void searchFile() {
+		List<PDSBoard> blist = (List<PDSBoard>)brepo.findAll();
+		for(PDSBoard board:blist) {
+			List<PDSFile> flist = board.getFiles2();
+			flist.forEach(f->{
+				if(f.getFno() == 5L) {
+					f.setPdsfilename("이상해씨.jpg");
+					//brepo.save(board);
+					frepo.save(f);
+				}
+			});
+		}
+	}
+	
+	//PPT 76p 
+	//첨부파일 수정 //DML 수행
+	@Transactional //이 클래스가 Test이기 때문에 DB에 반영되지는 않는다.(즉, Rollback이 된다. 결과를 반영하려면, class level에 @Commit을 추가해야 한다.)
+	//@Test
+	void updateFile2() {
+		int result = brepo.updatePDSFile(2L, "이미지성형하기.jpg");
+		log.info("결과: " + result);
+	}
+	
+	//첨부파일 수정 //DML 수행
+	//@Test
+	void updateFile1() {
+		PDSFile file = frepo.findById(1L).orElse(null);
+		if(file == null) return;
+		file.setPdsfilename("파일이름수정");
+		frepo.save(file);
+	}
+	
 	//PPT 74p
 	//3.Board별 File의 count얻기(File->Board)
 	//@Test

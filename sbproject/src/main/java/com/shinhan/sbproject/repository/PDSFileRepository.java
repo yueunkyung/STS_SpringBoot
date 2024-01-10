@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.shinhan.sbproject.vo2.PDSFile;
 
-public interface PDSFileRepository extends CrudRepository<PDSFile, Long>{
+public interface PDSFileRepository extends CrudRepository<PDSFile, Long>
+										, PagingAndSortingRepository<PDSFile, Long> {
 	 List<PDSFile> findByPdsfilenameContaining(String fname);
 	 
 	 @Query(value="select board.pname, count(file.fno)"
