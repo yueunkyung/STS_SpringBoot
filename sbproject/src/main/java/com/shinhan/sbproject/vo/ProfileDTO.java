@@ -1,6 +1,7 @@
-package com.shinhan.sbproject.vo;
+ package com.shinhan.sbproject.vo;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,7 +17,8 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString //(exclude = {"pno"}) //"pno"만 제외하고 //(of = {"pno"}) //"pno"만 나오게
+//@ToString //(exclude = {"pno"}) //"pno"만 제외하고 //(of = {"pno"}) //"pno"만 나오게
+@ToString (exclude = {"member"})
 @EqualsAndHashCode(of = {"pno","fname"} )
 @Builder
 @AllArgsConstructor
@@ -24,7 +26,7 @@ import lombok.ToString;
 @Entity
 @Table(name="tbl_profile_ek")
 public class ProfileDTO {
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long pno;
@@ -33,7 +35,9 @@ public class ProfileDTO {
 	//false:0  true:1
 	
 	//RDB와 유사, 참조하는쪽에 칼럼이 생성
-	@ManyToOne
+	//EAGER : 즉시(default)
+	//LAZY : 게으름
+	@ManyToOne(fetch = FetchType.LAZY)
 	private MemberDTO member; //member_mid칼럼이 DB생성된다. 
 	
 	//직원, 부서 

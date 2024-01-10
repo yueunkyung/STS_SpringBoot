@@ -3,6 +3,7 @@ package com.shinhan.sbproject;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
@@ -27,6 +28,47 @@ public class ManyToOneTest {
 	MemberRepository mrepo;
 	@Autowired
 	ProfileRepository prepo;
+	
+	@Test
+	void jpqlTest() {
+		String mid = "user1";
+		int count = mrepo.getProfileCountByMember(mid);
+		log.info(mid + " 의 프로파일 건 수 "+count);
+		
+		List<Object[]> result = mrepo.getProfileCountByMember();
+		result.forEach(data->{
+			log.info("getProfileCountByMember member의 profile 건 수: " + data[0] + "-------" + data[1] );
+		});
+
+		result = mrepo.getProfileCountByMember2();
+		result.forEach(data->{
+			log.info("getProfileCountByMember2 member의 profile 건 수: " + data[0] + "-------" + data[1] );
+		});
+	}
+	
+	//@Test
+	void profileDelete() {
+		prepo.deleteById(3L);
+	}
+	
+	//@Test
+	void selectByMember() {
+		MemberDTO member = MemberDTO.builder()
+				.mid("user1")
+				.build();
+		List<ProfileDTO> plist= prepo.findByMember(member);
+		plist.forEach(p->log.info(p.toString()));
+		
+		System.out.println("----------------------------------");
+		
+		plist = prepo.findByCurrentYnIsTrue();
+		plist.forEach(p->log.info(p.toString()));
+	}
+	
+	//@Test
+	void eagerLazyTest() {
+		prepo.findAll().forEach(p->log.info(p.toString()));
+	}
 	
 	//@Test
 	void ff() {
