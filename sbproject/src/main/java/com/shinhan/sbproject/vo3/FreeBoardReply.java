@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,7 +40,9 @@ public class FreeBoardReply { //PPT 80p
 	
 	@UpdateTimestamp
 	private Timestamp updatedate;
-	
+
+	@JsonIgnore	// 무한 loop되지 않도록 FreeBoard -> FreeBoardReply -> 다시 FreeBoard로 가는 것을 막아야한다.
+				// 자바 객체가 browser로 내려갈때 JSON data로 변경되어 내려간다. //com.fasterxml.jackson.databind 오류 때문에 추가
 	@ManyToOne //FK: board_bno
 	FreeBoard board2;
 	

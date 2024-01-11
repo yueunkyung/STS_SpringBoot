@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 
 
-@ComponentScan(basePackages = {"com.shinhan.firstzone","com.shinhan.firstzone2"})
+@ComponentScan(basePackages = {"com.shinhan.sbproject","com.shinhan.firstzone","com.shinhan.firstzone2"})
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = {"com.shinhan.firstzone", "com.shinhan.sbproject"})
 public class SbprojectApplication {
@@ -22,5 +22,4 @@ public class SbprojectApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SbprojectApplication.class, args);
 	}
-
 }

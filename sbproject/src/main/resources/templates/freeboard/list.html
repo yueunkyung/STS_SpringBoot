@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Board List</title>
+	<style>
+		h1 {
+			text-align: center;
+			padding: 20px 0;
+		}
+		table, tr, th, td {
+			border: 1px solid #666;
+			border-collapse: collapse;
+		}
+		table {
+		    width: 1240px;
+		    table-layout: fixed;
+		    margin: 0 auto;
+		}
+		th {
+			background-color: #efefef;
+		} 
+		th, td {
+			padding: 10px 15px;
+			text-align: center;
+		}
+		.hotpink {
+			background-color: #FFDFB9;
+			color: #A4193D;
+		}
+		.skyblue {
+			background-color: #A4193D;
+			color: #FFDFB9;
+		}
+		.first {
+			color: red;
+		}
+		.last {
+			color: blue;
+		}
+	</style>
+</head>
+<body>
+	<h1>freeBoard목록</h1>
+	
+	<!-- Spring boot PPT 118p -->
+	<h2 th:text="${@environment.getProperty('app.title')}"></h2>
+	<h2 th:text="${@environment.getProperty('server.port')}"></h2>
+	<!--/*
+	<p>[[#response.characterEncoding]]</p>
+	*/-->
+	<!-- //Spring boot PPT 118p -->
+	
+	<!-- 지역변수 선언 -->
+	<!-- table 태그에 지역변수 선언 => table 태그가 닫힐때까지 유효함 -->
+	<table th:with="target=${loginUser}, friend=${myFriend}">
+		<tr>
+			<th>index-count-size</th>
+			<th>first-last-odd-even</th>
+			<th>게시 번호</th>
+			<th>제목</th>
+			<th>작성자</th>
+			<th>내용</th>
+			<th>등록일</th>
+			<th>수정일</th>
+			<th></th>
+			<th>댓글 수</th>
+		</tr>
+		<tr th:each="board,status:${blist}" th:class="${status.even}?'hotpink':'skyblue'"><!-- th:each="변수:${list}" -->
+			<!-- 첫번째 row이면 글씨 색상이 red, 마지막 row면 파란색 -->
+			<td th:class="${status.first}?'first':''"
+				th:classappend="${status.last}?'last':''"
+				th:text="${status.index + '-' + status.count + '-' + status.size}" />
+			<td th:text="|${status.first}-${status.last}-${status.even}-${status.odd}|" />
+			<td th:text="${board.bno}" />
+			<td th:text="${board.title}" />
+			<td th:text="${board.writer==target?'타켓찾음 =>'+target: board.writer}" />
+			<td>
+				<!--/*
+					[[]] inline
+				*/-->
+				[[${board.bno}]]
+				[[${board.content}]]
+			</td>
+			<td th:text="${#dates.format(board.regdate,'yyyy-MM-dd')}" />
+			<td th:text="${#dates.format(board.updatedate,'yyyy-MM-dd')}" />
+			<td th:if="${board.writer}"> <!-- ${board.writer}가 있다면, -->
+				<p>
+					<a class="btn_modify" href="" th:if="${board.writer == friend}">수정</a>
+				</p>
+				<p th:unless="${board.writer == friend}">View</p>
+			</td>
+			<td th:text="${board.replies.size}"></td>
+			<!-- <td th:text="${#lists.size(board.replies)}"></td> -->
+		</tr>
+	</table>
+	<script th:inline="javascript">
+		//var boardList=/*[[${blist}]]*/[];
+		var boardList=eval('[[${blist}]]');
+		boardList.forEach(item => {
+			console.log(item);
+		});
+	</script>
+</body>
+</html>
