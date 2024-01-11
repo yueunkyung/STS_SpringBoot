@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -12,10 +13,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
+import com.querydsl.core.BooleanBuilder;
 import com.shinhan.sbproject.repository.FreeBoardReplyRepository;
 import com.shinhan.sbproject.repository.FreeBoardRepository;
 import com.shinhan.sbproject.vo3.FreeBoard;
 import com.shinhan.sbproject.vo3.FreeBoardReply;
+import com.shinhan.sbproject.vo3.QFreeBoard;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +31,47 @@ public class TwoWayTest {
 
 	@Autowired
 	FreeBoardReplyRepository replyRepo;
+	
+	
+	
+	@Test
+	void f5() {
+		String title = "연습2";
+		Long bno = 10L;
+		BooleanBuilder builder = new BooleanBuilder();
+		QFreeBoard board = QFreeBoard.freeBoard;
+		
+		if(title != null) builder.and(board.title.like("%"+title+"%")); //and title like '%'||?1||'%'
+		builder.and(board.bno.lt(bno)); //and bno < 10
+		
+		//boardRepo.findAll(builder).forEach(b -> log.info(b.toString()));
+		
+		//boardRepo.findAll(builder, Sort.by("bno").descending().forEach(b -> log.info(b.toString())));
+		
+		Pageable page = PageRequest.of(0, 5, Direction.DESC, "bno");
+		Page<FreeBoard> result = boardRepo.findAll(builder, page);
+		List<FreeBoard> blist = result.getContent();
+		log.info("건수 : " + result.getTotalElements());
+		log.info("페이지수 : " + result.getTotalElements());
+	}
 
+	//@Test
+	void f4() {
+		String title = "연습2";
+		boardRepo.selectBytitle(title).forEach(b->{
+			log.info("selectBytitle >>>" + Arrays.toString(b));
+		});
+		log.info("--------------------------------------------");
+		boardRepo.selectBytitle2(title).forEach(b->{
+			log.info("selectBytitle2 >>>" + Arrays.toString(b));
+		});
+		log.info("--------------------------------------------");
+		boardRepo.selectBytitle3(title).forEach(b->{
+			log.info("selectBytitle3 >>>" + Arrays.toString(b));
+		});
+		log.info("--------------------------------------------");
+	}
+	
 	//@Test
 	void f3() {
 		Sort sort = Sort.by(Direction.ASC, "bno");
