@@ -13,12 +13,12 @@
 	<th:block layout:fragment="style1"></th:block>
 	
 	fragment 삽입하기
-	<div th:replace="~{fragments/header::header2}"></div>
+	<div th:replace="fragments/header.html::header2"></div>
 	
 	하위 HTML에서 content 재정의할 예정
 	<div class="panel panel-default" layout:fragment="content1">!!!!!!</div>
 	
-	<div th:replace="~{fragments/footer::footer2}"></div>
+	<div th:replace="fragments/footer.html::footer2"></div>
 	
 	하위 HTML에서 javascript 재정의할 예정   th:block 은 없어지는 태그이다
 	<th:block layout:fragment="script1"></th:block>
