@@ -18,6 +18,12 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+		
+		<dependency>
+			<groupId>nz.net.ultraq.thymeleaf</groupId>
+			<artifactId>thymeleaf-layout-dialect</artifactId>
+		</dependency>
+
 		<!-- Querydsl ( Domain Specific Language ) 라이브러리 -->
 		<dependency>
 			<groupId>com.querydsl</groupId>
@@ -33,7 +39,7 @@
 			<classifier>jakarta</classifier>
 		</dependency>
 		<!-- //Querydsl ( Domain Specific Language ) 라이브러리 -->
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>

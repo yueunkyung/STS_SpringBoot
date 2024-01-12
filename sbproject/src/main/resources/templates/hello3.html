@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Thymeleaf param session study</title>
+</head>
+<body>
+	<p th:text="|1. 파라메터: ${myname}|" />
+	<p th:text="|2. 세션 아이디: ${myname2}|" />
+	<p th:text="|3. 날짜: ${now}|" />
+	<p th:text="|4. 날짜 Format: ${#dates.format(now, 'yyyy-MM-dd hh:mm:ss')}|" />
+	<p th:text="|5. 숫자: ${price}|" />
+	<p th:text="|6. 숫자 Format(정수만): ${#numbers.formatInteger(price, 3, 'COMMA')}|" />
+	<p th:text="|7. 숫자 Format(정수20, 소수3): ${#numbers.formatDecimal(price, 20, 3, 'POINT')}|" />
+	<p th:text="|8. 문자: ${title}|" />
+	<p th:text="|9. 문자: ${#strings.replace(title, 's', '<b>S</b>')}|" />
+	<p th:utext="|10. 문자: ${#strings.replace(title, 's', '<b>S</b>')}|" />
+	<p th:text="|11. 문자: ${#strings.toUpperCase(title)}|" />
+	<ul>
+		<li th:each="item:${#strings.listSplit(title, ' ')}">단어: [[${item}]]</li>
+	</ul>
+	<ul>
+		<li th:each="item:${options}">배열 항목: [[${item}]]</li>
+	</ul>
+	
+	<hr />
+	<h1>path 연습하기</h1>
+	<ul>
+		<li>
+			<a href="http://localhost:7777/freeboard/list">freeBoard 가기 01</a>
+		</li>
+		<li>
+			<a th:href="@{http://localhost:7777/freeboard/list}">freeBoard 가기 02 - Thymeleaf</a>
+		</li>
+		<li>
+			<a th:href="@{freeboard/list}">freeBoard 가기 03 - Thymeleaf 상대경로</a>
+		</li>
+		<li>
+			<a th:href="@{/freeboard/list}">freeBoard 가기 04 - Thymeleaf 절대경로</a>
+		</li>
+		<li>
+			<a th:href="@{/freeboard/list(myname=ek)}">freeBoard 가기 05 - Thymeleaf Param 전달</a>
+		</li>
+		<li>
+			<a th:href="@{~/app2/freeboard/list}">freeBoard 가기 06 - Thymeleaf contextpath가 다른 경우 tilde</a>
+		</li>
+	</ul>
+	
+	<script th:inline="javascript">
+		var arr = /*[[${options}]]*/[];
+		var arr2 = eval('[[${options}]]');
+		var str = "a=10; b=20; c=a+b; console.log(c)";
+		console.log(arr);
+		console.log(arr2);
+		eval(str);
+	</script>
+</body>
+</html>
