@@ -33,6 +33,9 @@
 				color: #fff;
 				text-decoration: none;
 			}
+			nav > div {
+				text-align: center;
+			}
 		</style>
 	</th:block>
 </head>
@@ -42,6 +45,17 @@
 		<p class="btn_wrap">
 			<a th:href="@{insert.do}" class="btn_write" >게시글작성</a>
 		</p>
+		<hr/>
+		<div class="pull-left">
+		  <select id="searchType">
+		     <option>전체</option>
+		     <option value="title" th:selected="${pageVO.type=='title'}">제목</option>
+		     <option value="content" th:selected="${pageVO.type=='content'}">내용</option>
+		     <option value="writer" th:selected="${pageVO.type=='writer'}">작성자</option>
+		  </select>
+		  <input type="text" id="searchKeyword" th:value="${pageVO.keyword}" />
+		  <button id="searchBtn">조건검색</button>
+		</div>
 		<table>
 			<tr>
 				<th>글번호</th>
@@ -52,9 +66,9 @@
 				<th>수정일</th>
 				<th>삭제</th>
 			</tr>
-			<tr th:each="board:${blist}">
+			<tr th:each="board:${blist.result.content} ">
 				<td>
-					<a th:href="@{detail.do(bno=${board.bno})}">[[${board.bno}]]</a>
+					<a th:href="@{detail.do(bno=${board.bno}, page=${pageVO.page}, size=${pageVO.size}, type=${pageVO.type}, keyword=${pageVO.keyword})}">[[${board.bno}]]</a>
 					<span class="badge bg-secondary">
 						[[${#lists.size(board.replies)}]]	
 					</span>
@@ -74,13 +88,70 @@
 				</td>
 			</tr>
 		</table>
-	</div> <!-- end_content -->
+		
+		<!-- paging -->
+		<nav>
+		   <div>
+		     <ul class="pagination">
+		       <li class="page-item" th:if="${blist.prevPage}">
+		         <a th:href="${blist.prevPage.pageNumber}+1">PREV [[${blist.prevPage.pageNumber}+1]]</a>
+		       </li>
+		        <li class="page-item" th:classappend="${p.pageNumber==blist.currentPageNum-1}?active:''" 
+		                             th:each="p:${blist.pageList}">
+		         <a th:href="${p.pageNumber}+1">[[${p.pageNumber}+1]]</a>
+		       </li>  
+		       <li class="page-item" th:if="${blist.nextPage}">
+		         <a th:href="${blist.nextPage.pageNumber}+1">NEXT [[${blist.nextPage.pageNumber}+1]]</a>
+		       </li>   
+		     </ul>
+		   </div>
+		</nav>
+		<!-- //paging -->
+		<!-- form -->
+		<form id="f1" th:action="@{/webboard/list.do}" method="get">
+		    <input type="hidden" name="page" th:value="${blist.currentPageNum}">
+		    <input type="hidden" name="size" th:value="${blist.currentPage.pageSize}">
+		    <input type="hidden" name="type" th:value="${pageVO.type}">
+		    <input type="hidden" name="keyword" th:value="${pageVO.keyword}">
+		</form>
+		<!-- //form -->
+	</div>
+	<!-- //end_content -->
 	<th:block layout:fragment="script1">
 		<script th:inline="javascript">
 			let msg = /*[[${message}]]*/null;	//값이 없을때 대체할 값
 			if(msg!=null) alert(msg);
 			function call(bno) {
 				location.href="delete.do?bno=" + bno;
+			}
+			
+			//Paging
+			var formObj = $("#f1");
+			$(".pagination a").click(function(e){
+				e.preventDefault(); //a tag link 클릭 제어
+				formObj.find("[name='page']").val($(this).attr('href'));
+				//formObj.attr("action", "/webboard/list.do");
+				formObj.submit();
+			});
+			
+			//Search
+			$("#searchBtn").click(function(){
+				var typeStr = $("#searchType").find(":selected").val();
+				var keywordStr = $("#searchKeyword").val();
+				formObj.find("[name='type']").val(typeStr);
+				formObj.find("[name='keyword']").val(keywordStr);
+				formObj.find("[name='page']").val(1);
+				formObj.submit();
+			});
+			
+			//엔터 Trigger
+			const inputWord = document.querySelector("#searchKeyword");
+			if (inputWord) {
+				inputWord.addEventListener("keyup", function(e) {
+					if (e.keyCode === 13) {
+						document.querySelector("#searchBtn").click();
+					};
+				});
 			}
 		</script>
 	</th:block>
