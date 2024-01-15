@@ -6,13 +6,38 @@
 <head>
 <meta charset="UTF-8">
 <title>board detail</title>
+<th:block>
+	<style>
+		*, label, input {
+			box-sizing: border-box;
+		}
+		.board_input_wrap {
+			padding: 30px;
+		}
+		.mb-3.row {
+			margin: 0;
+			margin-bottom: 15px;
+		}
+		.mb-3.row:last-child {
+			margin-top: 20px;
+			text-align: right;
+			margin: 0;
+		}
+		.reply_wrap {
+			padding: 0 30px 30px;
+		}
+		.reply_wrap .btn_wrap {
+			margin-bottom: 15px;
+		}
+	</style>
+</th:block>
 </head>
 <body>
 	<!-- content -->
-	<div class="panel panel-default" layout:fragment="content">
+	<div class="content-wrap panel panel-default" layout:fragment="content">
 		<!-- form -->
 		<form th:action="@{update.do}" method="post">
-			<div class="mb-3 row">
+			<div class="board_input_wrap">
 				<input type="hidden" class="form-control" name="bno"
 					th:value="${board.bno}">
 				<div class="mb-3 row">
@@ -51,7 +76,7 @@
 					</div>
 				</div>
 				<div class="mb-3 row">
-					<input class="btn btn-success" type="submit" value="저장하기">
+					<button class="btn btn-success" type="submit">저장하기</button>
 				</div>
 			</div>
 			<input type="hidden" name="page" th:value="${pageVO.page}">
@@ -60,24 +85,26 @@
 			<input type="hidden" name="keyword" th:value="${pageVO.keyword}">
 		</form>
 		<!-- //form -->
-		<!-- reply -->
-		<div>
-			<button data-toggle="modal" data-target="#myModal"
-				class="btn btn-warning" id="addReply">댓글추가</button>
+		<div class="reply_wrap">
+			<!-- reply -->
+			<div class="btn_wrap">
+				<button data-toggle="modal" data-target="#myModal"
+					class="btn btn-warning" id="addReplyBtn">댓글추가</button>
+			</div>
+			<table class="table table-striped table-bordered  table-hover">
+				<thead>
+					<tr>
+						<th>댓글번호</th>
+						<th>내용</th>
+						<th>작성자</th>
+					</tr>
+				</thead>
+				<tbody id="replyTable" data-toggle="modal" data-target="#myModal">
+	
+				</tbody>
+			</table>
+			<!-- //reply -->
 		</div>
-		<table class="table table-striped table-bordered  table-hover">
-			<thead>
-				<tr>
-					<th>댓글번호</th>
-					<th>내용</th>
-					<th>작성자</th>
-				</tr>
-			</thead>
-			<tbody id="replyTable" data-toggle="modal" data-target="#myModal">
-
-			</tbody>
-		</table>
-		<!-- //reply -->
 		<!-- Modal -->
 		<div id="myModal" class="modal fade" role="dialog">
 			<div class="model_dialog">
@@ -88,6 +115,7 @@
 						<h4 class="modal-title">modal-title변경 Modal Header</h4>
 					</div>
 					<div class="modal-body">
+						<input type="hidden" name="rno"class="form-control">
 						<label>ReplyText</label>
 						<input type="text" name="replyText" class="form-control">
 						<label>Replyer</label>
@@ -104,5 +132,95 @@
 		<!-- //Modal -->
 	</div>
 	<!-- //end_content -->
+	
+	<th:block layout:fragment="script1">
+		<script th:inline="javascript" th:src="@{/js/reply.js}"></script>
+		<script th:inline="javascript">
+			var obj = /*[[${board.bno}]]*/0; 
+			replyManager.getAll(obj, printList);
+			
+			function printList(replyList) {
+				console.log(replyList);
+				var str = "";
+				$.each(replyList, function(index, item){
+					str += `<tr>
+						<td>${item.rno}</td>
+						<td>${item.replyText}</td>
+						<td>${item.replyer}</td>
+					</tr>`;
+				});
+				$("#replyTable").html(str);
+			}
+			
+			// add reply
+			var mode = "";
+			var rno = $("input[name='rno']");
+			var replyText = $("input[name='replyText']");
+			var replyer = $("input[name='replyer']");
+			
+			$("#addReplyBtn").click(function() {
+				mode = "ADD";
+				alert("add클릭");
+				rno.val("");
+				replyer.val("");
+				replyer.val("");
+				$("#myModal").show();
+				$(".modal-title").text("댓글을 추가합니다.");
+			});
+
+			// modify reply
+			$("#replyTable").on("click", "tr", function() {
+				mode = "MOD";
+				var tds = $(this).find("td");
+				var no = tds[0].innerHTML;
+				var reply = tds[1].innerHTML;
+				var replyer = tds[2].innerHTML;
+				$("input[name='rno']").val(no);
+				$("input[name='replyText']").val(reply);
+				$("input[name='replyer']").val(replyer);
+				$("#myModal").show();
+				$(".modal-title").text("수정 또는 삭제 작업")
+			 });
+
+			//save reply
+		    $("#modalSaveBtn").click(function() {
+		    	var obj = {
+			    	"bno" : "[[${board.bno}]]",
+			    	"replyText" : replyText.val(),
+			    	"replyer" : replyer.val()
+		    	};
+		    	
+		    	if (mode == "ADD") {
+		    		replyManager.add(obj, printList);alert("입력완료");
+		    	} else if (mode == "MOD") {
+		    		obj["rno"] = rno.val();
+		    		replyManager.update(obj, printList);alert("수정완료");
+		    	}
+		    	
+		    	rno.val("");
+		    	replyText.val("");
+		    	replyer.val("");
+		    	
+		    	$("#myModal").modal("hide");
+	    	});
+			
+			//delete reply
+		    $("#modalDelBtn").click(function() { 
+		    	var obj = {
+			    	"bno" : "[[${board.bno}]]",
+			    	"rno" : rno.val()
+		    	};
+		    	
+		    	replyManager.remove(obj, printList);
+		    	alert("삭제완료");
+		    	rno.val("");
+		    	replyText.val("");
+		    	replyer.val("");
+		    	
+		    	$("#myModal").modal("hide");
+    	   });
+		</script>
+	</th:block>
+	
 </body>
 </html>

@@ -12,7 +12,7 @@
 				border: 1px solid #666;
 			}
 			table {
-				width: 90%;
+				width: 97%;
 				margin: 0 auto;
     			table-layout: fixed;
    				border-collapse: collapse;
@@ -20,11 +20,23 @@
 			}
 			th {
 				background-color: #ffe1e7;
+				text-align: center; 
+				padding: 7px 10px;
+			}
+			td {
+				padding: 5px 10px;
+			}
+			.content-wrap {
+				padding: 30px 0;
 			}
 			.btn_wrap {
 				width: 90%;
 				margin: 15px auto 20px;
 				text-align: right;
+			}
+			.btn_wrap + hr {
+				margin: 0;
+				border: 0;
 			}
 			.btn_write {
 				padding: 7px 10px;
@@ -33,6 +45,23 @@
 				color: #fff;
 				text-decoration: none;
 			}
+			.search_wrap {
+				margin-top: 20px;
+				margin-bottom: 30px;
+				text-align: center;
+				font-size: 14px;
+			}
+			.search_wrap select {
+				height: 32px;
+			}
+			.search_wrap input[type="text"] {
+				width: 300px;
+				height: 32px;
+				padding: 0 10px;
+			}
+			.search_wrap button {
+				height: 32px;
+			}
 			nav > div {
 				text-align: center;
 			}
@@ -40,13 +69,13 @@
 	</th:block>
 </head>
 <body>
-	<div class="panel panel-default" layout:fragment="content">
+	<div class="content-wrap panel panel-default" layout:fragment="content">
 		<p>[[${message}]]</p>
 		<p class="btn_wrap">
 			<a th:href="@{insert.do}" class="btn_write" >게시글작성</a>
 		</p>
 		<hr/>
-		<div class="pull-left">
+		<div class="search_wrap">
 		  <select id="searchType">
 		     <option>전체</option>
 		     <option value="title" th:selected="${pageVO.type=='title'}">제목</option>
