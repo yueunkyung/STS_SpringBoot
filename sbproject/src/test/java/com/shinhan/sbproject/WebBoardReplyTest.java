@@ -1,15 +1,19 @@
-package com.shinhan.sbproject.webboard;
-
-import lombok.extern.slf4j.Slf4j;
+package com.shinhan.sbproject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.shinhan.sbproject.webboard.WebBoard;
+import com.shinhan.sbproject.webboard.WebBoardRepository;
+import com.shinhan.sbproject.webboard.WebReply;
+import com.shinhan.sbproject.webboard.WebReplyRepository;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootTest
@@ -20,7 +24,7 @@ public class WebBoardReplyTest {
 	@Autowired
 	WebReplyRepository replyRepo;
 	
-	@Test
+	//@Test
 	void f4() {
 		//111, 112, 113 게시글의 댓글을 3개씩 입력
 		List<Long> alist = Arrays.asList(111L, 112L, 113L);

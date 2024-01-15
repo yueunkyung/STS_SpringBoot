@@ -3,6 +3,7 @@ package com.shinhan.sbproject.webboard;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -50,10 +51,17 @@ public class WebBoard {
 	@UpdateTimestamp // 생성시 생성일자, 수정시 변경된다.
 	private Timestamp updatedate;
 
-	// @BatchSize(size = 100)
+	
+	//Board 1건에 여러개의 댓글이 있다. Board 갯수만큼 댓글을 조회한다(N+1문제 발생)	
+	//↓↓↓ N+1문제 해결방법-1 (Entity에 넣는 방법) @BatchSize
+	//@BatchSize(size = 100)
 	@JsonIgnore
-	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "board"
+				, cascade = CascadeType.ALL
+				, fetch = FetchType.LAZY) // replies를 사용하지 않으면, LAZY 사용하면 EAGER
 	List<WebReply> replies;
+	
+	
 	// @OneToMany와 @ManyToMany는 기본이 지연 로딩(LAZY)이다.
 	// @ManyToOne이 EAGER임. 양방향이므로 reply에서 board정보필요하므로 N번 호출됨
 	// 그러므로 OneToMany에서 지연로딩으로 변경하여도 N번 쿼리 호출된다.
