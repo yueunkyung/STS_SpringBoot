@@ -21,12 +21,27 @@
 			th {
 				background-color: #ffe1e7;
 			}
+			.btn_wrap {
+				width: 90%;
+				margin: 15px auto 20px;
+				text-align: right;
+			}
+			.btn_write {
+				padding: 7px 10px;
+				background: green;
+				border-radius: 5px;
+				color: #fff;
+				text-decoration: none;
+			}
 		</style>
 	</th:block>
 </head>
 <body>
 	<div class="panel panel-default" layout:fragment="content">
 		<p>[[${message}]]</p>
+		<p class="btn_wrap">
+			<a th:href="@{insert.do}" class="btn_write" >게시글작성</a>
+		</p>
 		<table>
 			<tr>
 				<th>글번호</th>
