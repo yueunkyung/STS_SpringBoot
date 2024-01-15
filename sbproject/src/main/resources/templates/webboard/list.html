@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout1}">
+<head>
+<meta charset="UTF-8">
+<title>board list</title>
+	<th:block layout:fragment="style1">
+		<style>
+			table, th, td {
+				border: 1px solid #666;
+			}
+			table {
+				width: 90%;
+				margin: 0 auto;
+    			table-layout: fixed;
+   				border-collapse: collapse;
+				text-align: center; 
+			}
+			th {
+				background-color: #ffe1e7;
+			}
+		</style>
+	</th:block>
+</head>
+<body>
+	<div class="panel panel-default" layout:fragment="content">
+		<p>[[${message}]]</p>
+		<table>
+			<tr>
+				<th>글번호</th>
+				<th>제목</th>
+				<th>내용</th>
+				<th>작성자</th>
+				<th>등록일</th>
+				<th>수정일</th>
+				<th>삭제</th>
+			</tr>
+			<tr th:each="board:${blist}">
+				<td>
+					<a th:href="@{detail.do(bno=${board.bno})}">[[${board.bno}]]</a>
+					<span class="badge bg-secondary">
+						[[${#lists.size(board.replies)}]]	
+					</span>
+					<!--/* 
+					쿼리 호출 문제가 있어서 주석처리함
+					<span class="badge bg-primary">
+						[[${board.replies.size()}]]	
+					</span> */-->
+				</td>
+				<td>[[${board.title}]]</td>
+				<td>[[${board.content}]]</td>
+				<td>[[${board.writer}]]</td>
+				<td>[[${board.regdate}]]</td>
+				<td>[[${board.updatedate}]]</td>
+				<td>
+					<button th:onclick="call([[${board.bno}]])">삭제하기</button>
+				</td>
+			</tr>
+		</table>
+	</div> <!-- end_content -->
+	<th:block layout:fragment="script1">
+		<script th:inline="javascript">
+			let msg = /*[[${message}]]*/null;	//값이 없을때 대체할 값
+			if(msg!=null) alert(msg);
+			function call(bno) {
+				location.href="delete.do?bno=" + bno;
+			}
+		</script>
+	</th:block>
+</body>
+</html>
