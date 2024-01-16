@@ -6,11 +6,30 @@
 <head>
 <meta charset="UTF-8">
 <title>board insert</title>
+<th:block>
+	<style>
+		*, label, input {
+			box-sizing: border-box;
+		}
+		.board_input_wrap {
+			padding: 30px;
+		}
+		.mb-3.row {
+			margin: 0;
+			margin-bottom: 15px;
+		}
+		.mb-3.row:last-child {
+			margin-top: 20px;
+			text-align: right;
+			margin: 0;
+		}
+	</style>
+</th:block>
 </head>
 <body>
-	<div class="panel panel-default" layout:fragment="content">
+	<div class="content-wrap panel panel-default" layout:fragment="content">
 		<form th:action="@{insert.do}" method="post">
-		  <div class="mb-3 row">
+		  <div class="board_input_wrap">
 			  <div class="mb-3 row">
 			    <label for="title" class="col-sm-2 col-form-label">제목</label>
 			    <div class="col-sm-10">
