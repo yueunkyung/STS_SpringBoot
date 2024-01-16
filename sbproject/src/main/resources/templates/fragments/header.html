@@ -7,6 +7,11 @@
 <body>
 	<div th:fragment="header2">
 		<h1>Header조각2입니다.</h1>
+		<!--/*
+		<p class="login_user" th:if="${user != null}" th:text="${user.mname}+'님 환영합니다.'"></p> 
+		<p class="login_user" th:text="${user!=null?user.mname+'님 환영합니다.':''}"></p>
+		*/-->
+		<p class="login_user">[[${session.user!=null?session.user.mname+'님 환영합니다.':'mname이 없습니다.'}]]</p>
 	</div>
 	<div th:fragment="header3">
 		<h1>Header조각3입니다.</h1>
