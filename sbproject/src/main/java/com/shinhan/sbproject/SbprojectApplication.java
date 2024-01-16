@@ -3,6 +3,7 @@ package com.shinhan.sbproject;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /*
@@ -13,10 +14,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @EnableJpaRepositories를 사용하면 Repository가 있는 폴더는 모두 등록해야 한다.
  */
 
-
-@ComponentScan(basePackages = {"com.shinhan.sbproject","com.shinhan.firstzone","com.shinhan.firstzone2"})
+@EnableAspectJAutoProxy // @Aspact를 찾는다.
+@ComponentScan(basePackages = {"com.shinhan.sbproject","com.shinhan.firstzone","com.shinhan.firstzone2"}) //Component를 찾는다
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = {"com.shinhan.firstzone", "com.shinhan.sbproject"})
+
+//Entity를 찾음
 public class SbprojectApplication {
 
 	public static void main(String[] args) {
