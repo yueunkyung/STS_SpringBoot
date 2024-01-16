@@ -62,7 +62,10 @@ public class WebBoardController {
 		
 		Page<WebBoard> result = boardRepo.findAll(predicate, paging);
 		
-		PageMarker<WebBoard> pageMaker = new PageMarker<>(result, 5, page.getSize());
+		int totalPage = result.getTotalPages();
+		int minPage = Math.min(5, totalPage);
+		
+		PageMarker<WebBoard> pageMaker = new PageMarker<>(result, minPage, page.getSize());
 		
 		model.addAttribute("blist", pageMaker);
 		//paging, predicate, sort 추가함
