@@ -22,13 +22,15 @@ public class UploadFileUtils {
 		String imgPath = uploadPath + ymdPath;
 		File target = new File(imgPath, newFileName);
 		FileCopyUtils.copy(fileData, target);	//upload 파일
-//		String thumbFileName = "s_" + newFileName;
-//		File image = new File(imgPath + File.separator + newFileName);
-//		File thumbnail = new File(imgPath + File.separator + "s" + File.separator + thumbFileName);
-//		if (image.exists()) {
-//			thumbnail.getParentFile().mkdirs();
-//			Thumbnails.of(image).size(THUMB_WIDTH, THUMB_HEIGHT).toFile(thumbnail);	//썸네일 만들기
-//		}
+/*  thumbFile upload 시 오류로 주석처리
+		String thumbFileName = "s_" + newFileName;
+		File image = new File(imgPath + File.separator + newFileName);
+		File thumbnail = new File(imgPath + File.separator + "s" + File.separator + thumbFileName);
+		if (image.exists()) {
+			thumbnail.getParentFile().mkdirs();
+			Thumbnails.of(image).size(THUMB_WIDTH, THUMB_HEIGHT).toFile(thumbnail);	//썸네일 만들기
+		}
+*/
 		return newFileName;
 	}
 
