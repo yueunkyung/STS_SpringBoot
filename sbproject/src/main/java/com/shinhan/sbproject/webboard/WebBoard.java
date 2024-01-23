@@ -58,7 +58,7 @@ public class WebBoard {
 	@JsonIgnore
 	@OneToMany(mappedBy = "board"
 				, cascade = CascadeType.ALL
-				, fetch = FetchType.LAZY) // replies를 사용하지 않으면, LAZY 사용하면 EAGER
+				, fetch = FetchType.EAGER) // replies를 사용하지 않으면, LAZY 사용하면 EAGER
 	List<WebReply> replies;
 	
 	

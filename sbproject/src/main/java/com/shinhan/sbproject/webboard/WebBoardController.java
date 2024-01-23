@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Controller
+@Controller //요청을 보내면 실행, page를 return
 @RequiredArgsConstructor
 @RequestMapping("/webboard")
 public class WebBoardController {

@@ -21,7 +21,7 @@ public class SecurityConfig {
     }
     //무조건접근가능
     private static final String[] WHITE_LIST = {
-            "/auth/**", "/sample1", "/v3/**", "/swagger-ui/**"
+            "/auth/**", "/sample1", "/v3/**", "/swagger-ui/**", "/rest/**"
     };
     
     //http://localhost:7777/swagger-ui/index.html
@@ -37,28 +37,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
-        	//.csrf(c -> c.disable())
-            .cors(c -> c.disable())
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(WHITE_LIST).permitAll()
-                        .requestMatchers(USER_LIST).hasRole("USER")
-                        .requestMatchers(ADMIN_LIST).hasRole("ADMIN")
-                        .anyRequest().authenticated();
-                         
-                    });
+        	.csrf(c -> c.disable())
+            //.cors(c -> c.disable()) //출처가 다르면 못들어옴
+	        .authorizeHttpRequests(auth -> {
+	            auth.requestMatchers(WHITE_LIST).permitAll()
+	                .requestMatchers(USER_LIST).hasRole("USER")
+	                .requestMatchers(ADMIN_LIST).hasRole("ADMIN")
+	                .anyRequest().authenticated();
+	                 
+	            });
         http.formLogin(login -> login
-                .loginPage("/auth/login")  //form 기반인증, 기본적으로 HTTPSession 이용 
-                //.loginProcessingUrl("/auth/login")
-                .usernameParameter("mid")
-                .defaultSuccessUrl("/auth/loginSuccess")
-                .permitAll())
-                .logout(out -> out
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
-                        .logoutSuccessUrl("/auth/login")
-                        .invalidateHttpSession(true))
-                .exceptionHandling(handling -> handling.accessDeniedPage("/auth/accessDenined"));         
+            .loginPage("/auth/login")  //form 기반인증, 기본적으로 HTTPSession 이용 
+            //.loginProcessingUrl("/auth/login")
+            .usernameParameter("mid")
+            .defaultSuccessUrl("/auth/loginSuccess")
+            .permitAll())
+            .logout(out -> out
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
+                    .logoutSuccessUrl("/auth/login")
+                    .invalidateHttpSession(true))
+            .exceptionHandling(handling -> handling.accessDeniedPage("/auth/accessDenined"));         
          return http.build();
-    }
+		}
 
-    
-}
+	}
